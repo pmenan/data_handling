@@ -1,5 +1,7 @@
 # coding: utf-8
 from utils.fonctions import *
+import random
+import pandas as pd
 
 print("***********************************************************************************************************")
 print("*                              Manipulation de données avec python - pandas                               *")
@@ -13,3 +15,13 @@ data_frame_shap(df)
 
 # Description et information sur les données
 data_frame_description(df)
+
+# création d'un nouveau data df_2 sur la base de df.
+# la colonne 'age' est ajoutée, rempli avec des valeurs random compris entre 16 et 98 ans
+df_2 = add_random_col(df, 'age', 16, 98)
+
+# vérfication des distincts valeurs de la colonne age
+print(df_2['age'].value_counts())
+
+# chargements des données dans Amazon s3 bucket
+load_data_into_aws_s3_bucket(df_2, 'source-data-1234', 'fichier_client.csv')
