@@ -109,7 +109,7 @@ def load_data_into_aws_s3_bucket(df, s3_source:str, key:str):
     param:
         df : DataFrame qui contient les données à uploader dans s3
         s3_source : nom ndu target bucket
-        key : nom du fichier source
+        key : nom du fichier cible
    
     Prerequis :
         df doit être un dataFrame
