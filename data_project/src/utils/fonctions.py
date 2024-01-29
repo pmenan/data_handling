@@ -7,6 +7,61 @@ import boto3
 from io import StringIO
 from botocore.exceptions import ClientError
 
+def etl_function(path:str, column:str, random_value1:int, random_value2:int, s3_source:str, key:str):
+    """
+    Cette fonction permet de réaliser ELT complet
+    E : Extractioln
+    T : Transformation
+    L: Chargement.
+
+    - On récupère un fichier csv en local, 
+    - on le transforme (Ajout d'une nouvelle colonne) 
+    - puis on le charge dans aws s3 Bucket
+
+    param: 
+        path : chemin vers le fichier à traiter
+        column : colonne à ajouter au DataFrame
+        random_value1 : valeur minimale pour la colonne
+        random_value2 : valeur maximale pour la colonne
+        s3_source : nom du target bucket 
+        key : nom du fichier cible dans aws s3 Bucket
+    
+    return:
+        True si tout est ok
+        False sinon
+
+    """
+    try:
+        # chargement, extraction des données
+        df_init = load_csv_data(path)
+    except:
+        print("Erreur d'extraction du fichier source")
+        return False
+    print("Extraction --> OK")
+    try:
+        # Transformation des données
+        df_after = add_random_col(df_init, column, random_value1, random_value2)
+    except:
+        print("Erreur de transformation des données")
+        return False
+    print("Transformation --> OK")
+    try:
+        # description des données
+        data_frame_description(df_after)
+    except:
+        print("Erreur de Description des données")
+        return False
+    print("Description --> OK")
+    try:
+        # Chargement des données transformées dans aws s3 Bucket
+        load_data_into_aws_s3_bucket(df_after, s3_source, key)
+    except:
+        print("Erreur de chargemet ou de transformation")
+        return False
+    print("Chargement aws s3 Bucket --> OK")
+    return True
+
+
 def load_csv_data(path:str):
     """
     crèe un fichier csv à partir du paramètre path fourni en paramète
