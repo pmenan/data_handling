@@ -2,6 +2,8 @@
 from utils.fonctions import *
 import random
 import pandas as pd
+from datetime import datetime
+from configparser import ConfigParser
 
 print("***********************************************************************************************************")
 print("*                              Manipulation de données avec python - pandas                               *")
@@ -25,10 +27,34 @@ print("*************************************************************************
 
 # chargements des données dans Amazon s3 bucket
 #load_data_into_aws_s3_bucket(df_2, 'source-data-1234', 'fichier_client.csv')
-path = '~/OneDrive/Bureau/TALEND/DOSSIER_TALEND/Inputs/employes.csv'
-column = 'age'
-random_value1 = 16
-random_value2 = 98
-s3_source = 'destination-data-1234'
-key = 'fichier_client.csv'
-etl_function(path, column, random_value1, random_value2, s3_source, key)
+
+######################################################################################################################################
+###################### Résolution avec programmation fonctionnelle ###################################################################
+######################################################################################################################################
+
+#lecture du fichier de configuration
+parser = ConfigParser() 
+parser.read('D:/git_repo/data_handling/data_project/src/config.ini')
+
+# Récupération des paramètres [extract_data] 
+path = parser.get('extract_data', 'file_source_path')
+
+# Récupération des paramètres [transform]
+random_value1 = parser.get('transform', 'random_value1')
+random_value1 = int(random_value1)
+random_value2 = parser.get('transform', 'random_value2')
+random_value2 = int(random_value2)
+column = parser.get('transform', 'column')
+
+# Récupération des paramètres [load_data_in_s3]
+s3_destination = parser.get('load_data_in_s3', 's3_destination')
+file_name_to_load = parser.get('load_data_in_s3', 'file_name_to_load')
+file_format = parser.get('load_data_in_s3', 'file_format')
+
+# Date et heure du traitement 
+now = datetime.now()
+date_time_str = now.strftime("%Y%m%d_%H%M%S")
+key = file_name_to_load+'_'+date_time_str+'.'+file_format
+
+#Appel fonction ETL => Extract from local, transform and load into aws s3 Bucjet
+etl_function(path, column, random_value1, random_value2, s3_destination, key)

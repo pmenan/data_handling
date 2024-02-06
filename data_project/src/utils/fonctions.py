@@ -32,14 +32,14 @@ def etl_function(path:str, column:str, random_value1:int, random_value2:int, s3_
 
     """
     try:
-        # chargement, extraction des données
+    # chargement, extraction des données
         df_init = load_csv_data(path)
     except:
-        print("Erreur d'extraction du fichier source")
+        print("Erreur de transformation des données")
         return False
-    print("Extraction --> OK")
+    print("Transformation --> OK")
     try:
-        # Transformation des données
+        # Transformation
         df_after = add_random_col(df_init, column, random_value1, random_value2)
     except:
         print("Erreur de transformation des données")
@@ -151,6 +151,7 @@ def add_random_col(df, column:str, random_value1:int, random_value2:int):
     try:
         for index in range(0, df.shape[0]):
             df[column][index] = random.randint(random_value1,random_value2)
+
     except:
         print("Erreur : veillez vérifier le type des paramètres renseignés")
         return False
