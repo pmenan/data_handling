@@ -34,7 +34,7 @@ print("*************************************************************************
 
 #lecture du fichier de configuration
 parser = ConfigParser() 
-parser.read('D:/git_repo/data_handling/data_project/src/config.ini')
+parser.read('D:/git_repo/data_handling/data_project/src/config_load_to_aws.ini')
 
 # Récupération des paramètres [extract_data] 
 path = parser.get('extract_data', 'file_source_path')

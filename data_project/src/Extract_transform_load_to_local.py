@@ -2,33 +2,52 @@
 
 # import des modules 
 from utils.elt_functions import *
-from utils.transformation_functions import *
-import random
-import pandas as pd
 from datetime import datetime
 from configparser import ConfigParser
 
+#lecture du fichier de configuration
+parser = ConfigParser() 
+parser.read('D:/git_repo/data_handling/data_project/src/config_load_to_local.ini')
+
+# Récupération des paramètres [extract_data] 
+path_to_extract = parser.get('extract_data', 'path_to_extract')
+file_mask = parser.get('extract_data', 'file_mask')
+fiel_sep = parser.get('extract_data', 'fiel_sep')
+
+# Récupération des paramètres [transform]
+col_cal_to_add = parser.get('transform', 'col_cal_to_add')
+col_to_concat1 = parser.get('transform', 'col_to_concat1')
+col_to_concat2 = parser.get('transform', 'col_to_concat2')
+sort_column = parser.get('transform', 'sort_column')
+col_to_add = parser.get('transform', 'col_to_add')
+
+
+# Récupération des paramètres [load_data_into_local_dir]
+path_to_load = parser.get('load_data_into_local_dir', 'path_to_load')
+file_name = parser.get('load_data_into_local_dir', 'file_name')
 
 # Fonction etl d'Extraction, de transformation et de chargement de données.
 def etl(path_to_extract, file_mask, fiel_sep, col_cal_to_add, col_to_concat1, col_to_concat2, sort_column, col_to_add, value_to_add, path_to_load, file_name):
     #Extraction
     df = data_extraction(path_to_extract, file_mask, fiel_sep)
+    print("Extraction des données     -------> OK\n")
     #Transformation
     df1 = data_transformation(df, col_cal_to_add, col_to_concat1, col_to_concat2, sort_column, col_to_add, value_to_add)
+    print("Transformation des données -------> OK\n")
     #Charegement
     load_data(df1, path_to_load, file_name)
+    print("Chargement des données     -------> OK\n")
+
+
+# Date et heure de début du traitement 
+now = datetime.now()
+debut_traitement = now.strftime("%Y%m%d-%H:%M:%S")
+print(f"Début traitement : {debut_traitement} \n")
 
 # Appel à la fonction etl
-path_to_extract = "../data/input"
-file_mask = "*.csv"
-fiel_sep = ";" 
-col_cal_to_add = 'nom_prenom', 
-col_to_concat1 = "nom"
-col_to_concat2 = "prenom" 
-sort_column = "age"
-col_to_add = "date_traitement"
-path_to_load = "../data/output/"
-file_name = "client_tous_magasins.csv" 
-now = datetime.now()
 value_to_add = now.strftime("%Y%m%d-%H%M%S")
 etl(path_to_extract, file_mask, fiel_sep, col_cal_to_add, col_to_concat1, col_to_concat2, sort_column, col_to_add, value_to_add, path_to_load, file_name)
+
+# Date et heure de fin du traitement 
+fin_traitement = now.strftime("%Y%m%d-%H:%M:%S")
+print(f"Fin traitement : {fin_traitement} \n")
