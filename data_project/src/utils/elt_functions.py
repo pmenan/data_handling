@@ -27,10 +27,10 @@ def data_extraction(path, file_mask, fiel_sep):
         if len(file_liste) == 0:
             print("pas de fichier trouvé")
         elif len(file_liste) == 1:
-            df = pd.read_csv(file_liste, fiel_sep, index_col=False)
+            df = pd.read_csv(file_liste, fiel_sep, engine='python', index_col=False)
         else:
             for i in range(0, len(file_liste)): 
-                df_i = pd.read_csv(file_liste[i], sep = fiel_sep, index_col=False) 
+                df_i = pd.read_csv(file_liste[i], sep = fiel_sep, engine='python', index_col=False) 
                 frames.append(df_i)
             df = pd.concat(frames)
     except TypeError:
