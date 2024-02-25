@@ -4,7 +4,6 @@
 from utils.elt_functions import *
 from datetime import datetime
 from configparser import ConfigParser
-import glob
 
 #lecture du fichier de configuration
 parser = ConfigParser() 
@@ -23,7 +22,7 @@ sort_column = parser.get('transform', 'sort_column')
 col_to_add = parser.get('transform', 'col_to_add')
 
 
-# Récupération des paramètres [load_data_in_s3]
+# Récupération des paramètres [load_data_into_local_dir]
 path_to_load = parser.get('load_data_into_local_dir', 'path_to_load')
 file_name = parser.get('load_data_into_local_dir', 'file_name')
 
@@ -31,15 +30,24 @@ file_name = parser.get('load_data_into_local_dir', 'file_name')
 def etl(path_to_extract, file_mask, fiel_sep, col_cal_to_add, col_to_concat1, col_to_concat2, sort_column, col_to_add, value_to_add, path_to_load, file_name):
     #Extraction
     df = data_extraction(path_to_extract, file_mask, fiel_sep)
+    print("Extraction des données     -------> OK\n")
     #Transformation
     df1 = data_transformation(df, col_cal_to_add, col_to_concat1, col_to_concat2, sort_column, col_to_add, value_to_add)
+    print("Transformation des données -------> OK\n")
     #Charegement
     load_data(df1, path_to_load, file_name)
+    print("Chargement des données     -------> OK\n")
 
 
-# Date et heure du traitement 
+# Date et heure de début du traitement 
 now = datetime.now()
-value_to_add = now.strftime("%Y%m%d-%H%M%S")
+debut_traitement = now.strftime("%Y%m%d-%H:%M:%S")
+print(f"Début traitement : {debut_traitement} \n")
 
 # Appel à la fonction etl
+value_to_add = now.strftime("%Y%m%d-%H%M%S")
 etl(path_to_extract, file_mask, fiel_sep, col_cal_to_add, col_to_concat1, col_to_concat2, sort_column, col_to_add, value_to_add, path_to_load, file_name)
+
+# Date et heure de fin du traitement 
+fin_traitement = now.strftime("%Y%m%d-%H:%M:%S")
+print(f"Fin traitement : {fin_traitement} \n")
