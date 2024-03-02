@@ -1,7 +1,7 @@
 # coding: utf-8
 
 # import des lib necessaires aux fonctionnement des fonctions
-import os
+import os, shutil
 import glob
 import pandas as pd
 from datetime import datetime
@@ -53,6 +53,36 @@ def load_data(df, path_to_load, file_name):
     @file_name : String ---> Nom du fichier cible
     """
     df.to_csv(path_to_load+file_name, index=False)
+
+# Déplacer les fichiers csv traités vers un repertoire d'archive
+def move_source_file(path_source, path_to_move):
+    """
+    @path_source : String --> chemin d'accès aux fichiers source (exemple : "../data/input/")
+    @path_to_move : String --> chemin vers le répertoire dans lequel déplacer les fichiers source (exemple : "../data/input/archive/")
+    """    
+    file_liste = glob.glob(path_source+"/*.csv") 
+    for entry in file_liste:
+        shutil.move(entry, path_to_move)
+
+# Archive des fichiées traités dans le répertoire archiv 
+def archive_input_file(path_source, path_to_archive): 
+    """
+    @path_source : String --> chemin d'accès aux fichiers source (exemple : "../data/input/")
+    @path_to_archive : String --> chemin vers le répertoire dans lequel déplacer les fichiers source (exemple : "../data/input/archive/")
+    """
+    file_liste = glob.glob(path_source+"/*.csv") 
+    for entry in file_liste:
+        file_name = os.path.basename(entry)
+        os.path.join(path_to_archive, file_name)
+
+# Suppression des fichiers traités
+def delete_input_file(path):
+    """
+    @path : String --> chemin d'accès aux fichiers source (exemple : "../data/input/")
+    """
+    file_liste = glob.glob(path+"/*.csv")
+    for file in file_liste:
+        os.remove(file)
 
 
 ###############################
