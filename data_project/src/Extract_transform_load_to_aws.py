@@ -56,5 +56,5 @@ now = datetime.now()
 date_time_str = now.strftime("%Y%m%d_%H%M%S")
 key = file_name_to_load+'_'+date_time_str+'.'+file_format
 
-#Appel fonction ETL => Extract from local, transform and load into aws s3 Bucjet
+#Appel fonction ETL => Extract from local, transform and load into aws s3 Bucjet Data Lake
 etl_function(path, column, random_value1, random_value2, s3_destination, key)
